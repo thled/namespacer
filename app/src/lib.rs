@@ -25,12 +25,25 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn fix_namespace<'a>(_filename: &str, content: &'a str) -> String {
+fn fix_namespace<'a>(filename: &str, content: &'a str) -> String {
+    let mut parts: Vec<&str> = filename.split("/").collect();
+    parts.pop();
+    let mut ns = String::from("namespace ");
+    for part in parts {
+        if part == "src" {
+            ns.push_str("App");
+        } else {
+            ns.push('\\');
+            ns.push_str(part);
+        }
+    }
+    ns.push(';');
+    println!("{}", ns);
+
     let mut fixed_content = String::from("");
     for line in content.lines() {
         if line.contains("namespace") {
-            let fixed_namespace = "namespace App\\Controller;";
-            fixed_content.push_str(fixed_namespace);
+            fixed_content.push_str(ns.as_str());
         } else {
             fixed_content.push_str(line);
         }
