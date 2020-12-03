@@ -2,10 +2,18 @@ FROM rust:1.48-alpine3.12
 
 ENV USER=rust
 
-RUN adduser -D rust
+# install utilities
+RUN apk add --no-cache \
+    # needed by cargo-watch
+    libc-dev ncurses \
+    # create user
+    && adduser -D -g '' rust
+
 USER rust
 
-RUN rustup component add rustfmt
+# install rust tools
+RUN rustup component add rustfmt \
+    && cargo install cargo-watch
 
 WORKDIR /usr/src/app
 
