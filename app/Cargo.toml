@@ -1,0 +1,7 @@
+[package]
+name = "namespacer"
+version = "0.1.0"
+authors = ["thled <dev@tleduc.de>"]
+edition = "2018"
+
+[dependencies]
