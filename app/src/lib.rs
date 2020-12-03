@@ -92,4 +92,28 @@ class Index {}
 ";
         assert_eq!(fix_namespace(filename, content), expected_result);
     }
+
+    #[test]
+    fn different_filename() {
+        let filename = "src/Model/User.php";
+        let content = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Incorrect;
+
+class User {}";
+
+        let expected_result = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Model;
+
+class User {}
+";
+        assert_eq!(fix_namespace(filename, content), expected_result);
+    }
 }
