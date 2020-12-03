@@ -17,21 +17,27 @@ impl Config {
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    let contents = fs::read_to_string(config.filename)?;
+    let filename = config.filename.as_str();
+    let content = fs::read_to_string(&filename)?;
 
-    fix_namespace(&contents);
+    fix_namespace(filename, &content);
 
     Ok(())
 }
 
-pub fn fix_namespace(contents: &str) -> &str {
-    for line in contents.lines() {
+fn fix_namespace<'a>(_filename: &str, content: &'a str) -> String {
+    let mut fixed_content = String::from("");
+    for line in content.lines() {
         if line.contains("namespace") {
-            println!("Found a namespace!");
+            let fixed_namespace = "namespace App\\Controller;";
+            fixed_content.push_str(fixed_namespace);
+        } else {
+            fixed_content.push_str(line);
         }
+        fixed_content.push('\n');
     }
 
-    contents
+    fixed_content
 }
 
 #[cfg(test)]
@@ -39,8 +45,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn no_fix() {
-        let contents = "\
+    fn correct_namespace() {
+        let filename = "src/Controller/Index.php";
+        let content = "\
 <?php
 
 declare(strict_types=1);
@@ -48,7 +55,41 @@ declare(strict_types=1);
 namespace App\\Controller;
 
 class Index {}";
+        let expected_result = String::from(
+            "\
+<?php
 
-        assert_eq!(contents, fix_namespace(contents));
+declare(strict_types=1);
+
+namespace App\\Controller;
+
+class Index {}
+",
+        );
+        assert_eq!(fix_namespace(filename, content), expected_result);
+    }
+
+    #[test]
+    fn incorrect_namespace() {
+        let filename = "src/Controller/Index.php";
+        let content = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Controller\\Incorrect;
+
+class Index {}";
+
+        let expected_result = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Controller;
+
+class Index {}
+";
+        assert_eq!(fix_namespace(filename, content), expected_result);
     }
 }
