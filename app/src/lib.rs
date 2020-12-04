@@ -18,39 +18,48 @@ impl Config {
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let filename = config.filename.as_str();
-    let content = fs::read_to_string(&filename)?;
+    let contents = fs::read_to_string(&filename)?;
 
-    fix_namespace(filename, &content);
+    let fixed_contents = fix_namespace(filename, &contents);
+
+    let fixed_filename = "tmp_fixed";
+    fs::write(fixed_filename, fixed_contents)?;
+    fs::rename(fixed_filename, filename)?;
 
     Ok(())
 }
 
-fn fix_namespace<'a>(filename: &str, content: &'a str) -> String {
+fn fix_namespace<'a>(filename: &str, contents: &'a str) -> String {
     let mut parts: Vec<&str> = filename.split("/").collect();
     parts.pop();
-    let mut ns = String::from("namespace ");
+    let mut ns = String::from("namespace App");
+    let mut found_src = false;
+
     for part in parts {
-        if part == "src" {
-            ns.push_str("App");
-        } else {
-            ns.push('\\');
-            ns.push_str(part);
+        if !found_src && part != "src" {
+            continue;
+        } else if part == "src" {
+            found_src = true;
+            continue;
         }
+        ns.push('\\');
+        ns.push_str(part);
     }
+
     ns.push(';');
     println!("{}", ns);
 
-    let mut fixed_content = String::from("");
-    for line in content.lines() {
+    let mut fixed_contents = String::from("");
+    for line in contents.lines() {
         if line.contains("namespace") {
-            fixed_content.push_str(ns.as_str());
+            fixed_contents.push_str(ns.as_str());
         } else {
-            fixed_content.push_str(line);
+            fixed_contents.push_str(line);
         }
-        fixed_content.push('\n');
+        fixed_contents.push('\n');
     }
 
-    fixed_content
+    fixed_contents
 }
 
 #[cfg(test)]
@@ -60,7 +69,7 @@ mod tests {
     #[test]
     fn correct_namespace() {
         let filename = "src/Controller/Index.php";
-        let content = "\
+        let contents = "\
 <?php
 
 declare(strict_types=1);
@@ -79,13 +88,13 @@ namespace App\\Controller;
 class Index {}
 ",
         );
-        assert_eq!(fix_namespace(filename, content), expected_result);
+        assert_eq!(fix_namespace(filename, contents), expected_result);
     }
 
     #[test]
     fn incorrect_namespace() {
         let filename = "src/Controller/Index.php";
-        let content = "\
+        let contents = "\
 <?php
 
 declare(strict_types=1);
@@ -103,13 +112,13 @@ namespace App\\Controller;
 
 class Index {}
 ";
-        assert_eq!(fix_namespace(filename, content), expected_result);
+        assert_eq!(fix_namespace(filename, contents), expected_result);
     }
 
     #[test]
     fn different_filename() {
         let filename = "src/Model/User.php";
-        let content = "\
+        let contents = "\
 <?php
 
 declare(strict_types=1);
@@ -127,6 +136,30 @@ namespace App\\Model;
 
 class User {}
 ";
-        assert_eq!(fix_namespace(filename, content), expected_result);
+        assert_eq!(fix_namespace(filename, contents), expected_result);
+    }
+
+    #[test]
+    fn begin_namespace_from_src_dir() {
+        let filename = "app/src/Controller/Index.php";
+        let contents = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Incorrect;
+
+class Index {}";
+
+        let expected_result = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Controller;
+
+class Index {}
+";
+        assert_eq!(fix_namespace(filename, contents), expected_result);
     }
 }
