@@ -1,4 +1,4 @@
-use std::{error::Error, fs};
+use std::{error::Error, fs, path::PathBuf};
 
 pub struct Config {
     pub filename: String,
@@ -20,11 +20,12 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let filename = config.filename.as_str();
     let contents = fs::read_to_string(&filename)?;
 
-    let fixed_contents = fix_namespace(filename, &contents);
+    let fixed_contents = fix_namespace(&filename, &contents);
 
-    let fixed_filename = "tmp_fixed";
-    fs::write(fixed_filename, fixed_contents)?;
-    fs::rename(fixed_filename, filename)?;
+    let mut tmp_filename = PathBuf::from(&filename);
+    tmp_filename.set_extension("ns_tmp");
+    fs::write(&tmp_filename, fixed_contents)?;
+    fs::rename(&tmp_filename, filename)?;
 
     Ok(())
 }
