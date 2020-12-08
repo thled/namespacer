@@ -18,42 +18,48 @@ impl Config {
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let filename = config.filename.as_str();
-    let contents = fs::read_to_string(&filename)?;
+    let contents = fs::read_to_string(filename)?;
 
-    let fixed_contents = fix_namespace(&filename, &contents);
+    let fixed_contents = fix_namespace(filename, &contents);
 
-    let mut tmp_filename = PathBuf::from(&filename);
-    tmp_filename.set_extension("ns_tmp");
-    fs::write(&tmp_filename, fixed_contents)?;
-    fs::rename(&tmp_filename, filename)?;
+    write_fix(filename, &fixed_contents)?;
 
     Ok(())
 }
 
+fn write_fix(filename: &str, fixed_contents: &String) -> Result<(), Box<dyn Error>> {
+    let mut tmp_filename = PathBuf::from(filename);
+    tmp_filename.set_extension("ns_tmp");
+    fs::write(&tmp_filename, fixed_contents)?;
+    fs::rename(&tmp_filename, filename)?;
+    Ok(())
+}
+
 fn fix_namespace<'a>(filename: &str, contents: &'a str) -> String {
-    let mut parts: Vec<&str> = filename.split("/").collect();
-    parts.pop();
-    let mut ns = String::from("namespace App");
+    let file_path = PathBuf::from(filename);
+    let path = file_path.parent().unwrap();
+
+    let mut namespace = String::from("namespace App");
     let mut found_src = false;
 
-    for part in parts {
+    for part in path.iter() {
         if !found_src && part != "src" {
             continue;
         } else if part == "src" {
             found_src = true;
             continue;
         }
-        ns.push('\\');
-        ns.push_str(part);
+        namespace.push('\\');
+        namespace.push_str(part.to_str().unwrap());
     }
 
-    ns.push(';');
-    println!("{}", ns);
+    namespace.push(';');
+    println!("{}", namespace);
 
     let mut fixed_contents = String::from("");
     for line in contents.lines() {
         if line.contains("namespace") {
-            fixed_contents.push_str(ns.as_str());
+            fixed_contents.push_str(namespace.as_str());
         } else {
             fixed_contents.push_str(line);
         }
