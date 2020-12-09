@@ -11,7 +11,7 @@ impl Namespace {
     pub fn new(config: &Config) -> Namespace {
         let file_path = PathBuf::from(&config.filename);
         let path = file_path.parent().unwrap();
-        let base_dir = PathBuf::from(&config.dir);
+        let base_dir = PathBuf::from(&config.base_dir);
         Namespace {
             vendor: config.vendor.clone(),
             prefix: config.prefix.clone(),
@@ -21,28 +21,36 @@ impl Namespace {
     }
 
     fn create_line(&self) -> String {
-        String::from("todo")
+        let mut line = String::from("namespace ");
+        line.push_str(&self.vendor);
+        line.push('\\');
+        let ns = self.path.strip_prefix(self.base_dir.to_str().unwrap());
+        line.push_str(ns.unwrap().to_str().unwrap());
+        line.push(';');
+
+        line
     }
 }
 
 pub struct Config {
     pub filename: String,
-    pub dir: String,
+    pub base_dir: String,
     pub prefix: String,
     pub vendor: String,
 }
 
 impl Config {
     pub fn new(args: &Vec<String>) -> Result<Config, &'static str> {
-        if args.len() < 2 {
+        if args.len() < 3 {
             return Err("not enough arguments");
         }
 
         let filename = args[1].clone();
+        let base_dir = args[2].clone();
 
         Ok(Config {
             filename,
-            dir: String::from("src"),
+            base_dir,
             prefix: String::from("Pre"),
             vendor: String::from("App"),
         })
@@ -100,7 +108,8 @@ mod tests {
     fn correct_namespace() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("src/Controller/Index.php");
-        let args = vec![executable_name, filename];
+        let base_dir = String::from("src");
+        let args = vec![executable_name, filename, base_dir];
         let config = Config::new(&args).unwrap();
         let contents = "\
 <?php
@@ -119,7 +128,7 @@ class Index {}";
 
 declare(strict_types=1);
 
-todo
+namespace App\\Controller;
 
 class Index {}
 ",
@@ -131,7 +140,8 @@ class Index {}
     fn incorrect_namespace() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("src/Controller/Index.php");
-        let args = vec![executable_name, filename];
+        let base_dir = String::from("src");
+        let args = vec![executable_name, filename, base_dir];
         let config = Config::new(&args).unwrap();
         let contents = "\
 <?php
@@ -150,7 +160,7 @@ class Index {}";
 
 declare(strict_types=1);
 
-todo
+namespace App\\Controller;
 
 class Index {}
 ",
@@ -162,7 +172,8 @@ class Index {}
     fn different_filename() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("src/Entity/User.php");
-        let args = vec![executable_name, filename];
+        let base_dir = String::from("src");
+        let args = vec![executable_name, filename, base_dir];
         let config = Config::new(&args).unwrap();
         let contents = "\
 <?php
@@ -171,7 +182,7 @@ declare(strict_types=1);
 
 namespace App\\Incorrect;
 
-class Index {}";
+class User {}";
 
         let fixed_contents = fix(contents, &config);
 
@@ -181,9 +192,9 @@ class Index {}";
 
 declare(strict_types=1);
 
-todo
+namespace App\\Entity;
 
-class Index {}
+class User {}
 ",
         );
         assert_eq!(fixed_contents, expected_result);
@@ -193,7 +204,8 @@ class Index {}
     fn begin_namespace_from_src_dir() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("app/src/Controller/Index.php");
-        let args = vec![executable_name, filename];
+        let base_dir = String::from("app/src");
+        let args = vec![executable_name, filename, base_dir];
         let config = Config::new(&args).unwrap();
         let contents = "\
 <?php
@@ -212,9 +224,41 @@ class Index {}";
 
 declare(strict_types=1);
 
-todo
+namespace App\\Controller;
 
 class Index {}
+",
+        );
+        assert_eq!(fixed_contents, expected_result);
+    }
+
+    #[test]
+    fn multiple_parts() {
+        let executable_name = String::from("bin/namespacer");
+        let filename = String::from("src/Controller/User/Login.php");
+        let base_dir = String::from("src");
+        let args = vec![executable_name, filename, base_dir];
+        let config = Config::new(&args).unwrap();
+        let contents = "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Incorrect;
+
+class Login {}";
+
+        let fixed_contents = fix(contents, &config);
+
+        let expected_result = String::from(
+            "\
+<?php
+
+declare(strict_types=1);
+
+namespace App\\Controller\\User;
+
+class Login {}
 ",
         );
         assert_eq!(fixed_contents, expected_result);
