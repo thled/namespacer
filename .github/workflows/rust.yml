@@ -2,6 +2,10 @@ on: [push, pull_request]
 
 name: Continuous integration
 
+defaults:
+  run:
+    working-directory: ./app
+
 jobs:
   check:
     name: Check
@@ -15,7 +19,6 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
-          working-directory: ./app
           command: check
 
   test:
@@ -30,7 +33,6 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
-          working-directory: ./app
           command: test
 
   fmt:
@@ -46,7 +48,6 @@ jobs:
       - run: rustup component add rustfmt
       - uses: actions-rs/cargo@v1
         with:
-          working-directory: ./app
           command: fmt
           args: --all -- --check
 
@@ -63,6 +64,5 @@ jobs:
       - run: rustup component add clippy
       - uses: actions-rs/cargo@v1
         with:
-          working-directory: ./app
           command: clippy
           args: -- -D warnings
