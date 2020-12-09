@@ -18,4 +18,4 @@ todo
 
 #### Watcher
 
-`$ cargo watch -x test -i tests/data`
+`$ cargo watch -cx test -i tests/data`

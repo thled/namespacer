@@ -22,10 +22,15 @@ impl Namespace {
 
     fn create_line(&self) -> String {
         let mut line = String::from("namespace ");
+
         line.push_str(&self.vendor);
         line.push('\\');
-        let ns = self.path.strip_prefix(self.base_dir.to_str().unwrap());
-        line.push_str(ns.unwrap().to_str().unwrap());
+
+        let dir = self.path.strip_prefix(self.base_dir.to_str().unwrap());
+        let dir = dir.unwrap().to_str().unwrap();
+        let main = dir.replace("/", "\\");
+        line.push_str(main.as_str());
+
         line.push(';');
 
         line
