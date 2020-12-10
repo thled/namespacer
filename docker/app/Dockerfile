@@ -5,14 +5,20 @@ ENV USER=rust
 # install utilities
 RUN apk add --no-cache \
     # needed by cargo-watch
-    libc-dev ncurses \
+    libc-dev \
+    ncurses \
     # create user
     && adduser -D -g '' rust
 
 USER rust
 
 # install rust tools
-RUN rustup component add rustfmt \
+RUN rustup component add \
+    # formatting
+    rustfmt \
+    # linting
+    clippy \
+    # test watcher
     && cargo install cargo-watch
 
 WORKDIR /usr/src/app

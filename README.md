@@ -10,6 +10,11 @@ namespacer is a command line tool to automatically fix wrong `namespace` declara
 
 todo
 
+### Development
+
+- [Docker][docker]
+- [Docker-Compose][docker-compose]
+
 ## Installation
 
 todo
@@ -20,9 +25,13 @@ todo
 
 todo
 
-## Development
+## Developing
 
 todo
+
+### Linting
+
+`$ cargo clippy`
 
 ### Testing
 
@@ -32,9 +41,15 @@ todo
 
 `$ cargo watch -cx test -i tests/data`
 
+## Contribute
+
+Please do contribute! Issues and pull requests are welcome.
+
 [version-badge]: https://img.shields.io/badge/version-0.1.0-blue.svg
 [changelog]: ./CHANGELOG.md
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: ./LICENSE
 [rust-badge]: https://img.shields.io/badge/Rust-1.48-blue.svg
 [rust]: https://blog.rust-lang.org/2020/11/19/Rust-1.48.html
+[docker]: https://docs.docker.com/install/
+[docker-compose]: https://docs.docker.com/compose/install/

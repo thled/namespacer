@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- "Contribute" section to Readme.
+- Clippy tool for linting.
+
+### Changed
+
 ## [0.1.0] - 2020-12-09
 
 ### Added
