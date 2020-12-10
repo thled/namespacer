@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+pub mod checker;
 use crate::config::Config;
 
 pub struct Namespace {

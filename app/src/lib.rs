@@ -1,7 +1,7 @@
 use std::{error::Error, fs, io, path::PathBuf};
 
 pub use config::Config;
-use namespace::Namespace;
+use namespace::{checker, Namespace};
 
 mod config;
 mod namespace;
@@ -10,9 +10,10 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = read_file(&config)?;
 
     let namespace = Namespace::new(&config);
-    let fixed_contents = namespace.fix(&contents);
-
-    write_fix(&fixed_contents, &config)?;
+    if !checker::check(&namespace, &contents) {
+        let fixed_contents = namespace.fix(&contents);
+        write_fix(&fixed_contents, &config)?;
+    }
 
     Ok(())
 }
