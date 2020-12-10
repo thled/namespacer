@@ -20,6 +20,20 @@ impl Namespace {
         }
     }
 
+    fn fix(&self, contents: &str) -> String {
+        let mut fixed_contents = String::from("");
+        for line in contents.lines() {
+            if line.starts_with("namespace ") {
+                fixed_contents.push_str(self.create_line().as_str());
+            } else {
+                fixed_contents.push_str(line);
+            }
+            fixed_contents.push('\n');
+        }
+
+        fixed_contents
+    }
+
     fn create_line(&self) -> String {
         let mut line = String::from("namespace ");
 
@@ -65,7 +79,8 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = read_file(&config)?;
 
-    let fixed_contents = fix(&contents, &config);
+    let namespace = Namespace::new(&config);
+    let fixed_contents = namespace.fix(&contents);
 
     write_fix(&fixed_contents, &config)?;
 
@@ -83,26 +98,6 @@ fn write_fix(fixed_contents: &str, config: &Config) -> Result<(), Box<dyn Error>
     fs::write(&tmp_filename, fixed_contents)?;
     fs::rename(&tmp_filename, filename)?;
     Ok(())
-}
-
-fn fix<'a>(contents: &'a str, config: &Config) -> String {
-    let namespace = create_namespace(config);
-
-    let mut fixed_contents = String::from("");
-    for line in contents.lines() {
-        if line.starts_with("namespace ") {
-            fixed_contents.push_str(namespace.create_line().as_str());
-        } else {
-            fixed_contents.push_str(line);
-        }
-        fixed_contents.push('\n');
-    }
-
-    fixed_contents
-}
-
-fn create_namespace(config: &Config) -> Namespace {
-    Namespace::new(config)
 }
 
 #[cfg(test)]
@@ -125,7 +120,8 @@ namespace App\\Controller;
 
 class Index {}";
 
-        let fixed_contents = fix(contents, &config);
+        let namespace = Namespace::new(&config);
+        let fixed_contents = namespace.fix(contents);
 
         let expected_result = String::from(
             "\
@@ -157,7 +153,8 @@ namespace App\\Controller\\Incorrect;
 
 class Index {}";
 
-        let fixed_contents = fix(contents, &config);
+        let namespace = Namespace::new(&config);
+        let fixed_contents = namespace.fix(contents);
 
         let expected_result = String::from(
             "\
@@ -189,7 +186,8 @@ namespace App\\Incorrect;
 
 class User {}";
 
-        let fixed_contents = fix(contents, &config);
+        let namespace = Namespace::new(&config);
+        let fixed_contents = namespace.fix(contents);
 
         let expected_result = String::from(
             "\
@@ -221,7 +219,8 @@ namespace App\\Incorrect;
 
 class Index {}";
 
-        let fixed_contents = fix(contents, &config);
+        let namespace = Namespace::new(&config);
+        let fixed_contents = namespace.fix(contents);
 
         let expected_result = String::from(
             "\
@@ -253,7 +252,8 @@ namespace App\\Incorrect;
 
 class Login {}";
 
-        let fixed_contents = fix(contents, &config);
+        let namespace = Namespace::new(&config);
+        let fixed_contents = namespace.fix(contents);
 
         let expected_result = String::from(
             "\
