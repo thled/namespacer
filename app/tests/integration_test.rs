@@ -4,8 +4,8 @@ use std::{error::Error, io};
 
 #[test]
 fn fix_incorrect_namespace() -> Result<(), Box<dyn Error>> {
-    let dir = "tests/data/src";
-    let path = format!("{}/{}", dir, "Controller/User");
+    let base_dir = "tests/data/src";
+    let path = format!("{}/{}", base_dir, "Controller/User");
     let filename = format!("{}/{}", path, "Login.php");
     let contents = "\
 <?php
@@ -20,7 +20,7 @@ class Login {}
     fs::write(&filename, &contents)?;
 
     let executable_name = String::from("/bin/namespacer");
-    let args = vec![executable_name, filename.clone(), dir.to_string()];
+    let args = vec![executable_name, filename.clone(), base_dir.to_string()];
     let config = namespacer::Config::new(&args)?;
 
     namespacer::run(config)?;
@@ -38,8 +38,7 @@ class Login {}
 
     assert_eq!(fixed_contents, expected_contents);
 
-    // todo: use catch_unwind to clean up even if failed
-    teardown(dir)?;
+    teardown(&base_dir)?;
     Ok(())
 }
 
