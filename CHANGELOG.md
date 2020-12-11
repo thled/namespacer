@@ -11,8 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Contribute" section to Readme.
 - Clippy tool for linting.
+- Support for adding the correct namespace if none was given at all.
 
 ### Changed
+
+- No write operation if namespace was already correct.
 
 ## [0.1.0] - 2020-12-09
 

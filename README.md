@@ -4,7 +4,8 @@
 [![MIT License][license-badge]][license]
 [![Rust][rust-badge]][rust]
 
-namespacer is a command line tool to automatically fix wrong `namespace` declarations in PHP files according to PSR-4.
+namespacer is a command line tool to automatically fix wrong `namespace` declarations in PHP files
+according to PSR-4 and PSR-12.
 
 ## Requirements
 
