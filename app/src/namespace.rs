@@ -46,5 +46,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn correct_namespace() {}
+    fn create_line() {
+        let executable_name = String::from("bin/namespacer");
+        let filename = String::from("src/Controller/User/Login.php");
+        let base_dir = String::from("src");
+        let args = vec![executable_name, filename, base_dir];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        let line = namespace.create_line();
+
+        assert_eq!(line, "namespace App\\Controller\\User;");
+    }
+
+    #[test]
+    fn multi_part_base_dir() {
+        let executable_name = String::from("bin/namespacer");
+        let filename = String::from("app/src/Controller/User/Login.php");
+        let base_dir = String::from("app/src");
+        let args = vec![executable_name, filename, base_dir];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        let line = namespace.create_line();
+
+        assert_eq!(line, "namespace App\\Controller\\User;");
+    }
 }
