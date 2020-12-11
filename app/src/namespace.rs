@@ -49,59 +49,47 @@ impl Namespace {
 mod tests {
     use super::*;
 
+    fn create_namespace(filename: &str, base_dir: &str) -> Namespace {
+        let executable_name = String::from("bin/namespacer");
+        let filename = String::from(filename);
+        let base_dir = String::from(base_dir);
+        let args = vec![executable_name, filename, base_dir];
+        let config = Config::new(&args).unwrap();
+        Namespace::new(&config)
+    }
+
     #[test]
     fn no_dirs() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("Kernel.php");
-        let base_dir = String::from("");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("Kernel.php", "");
 
-        let line = namespace.create_line();
-
-        assert_eq!(line, "namespace App;");
+        assert_eq!(namespace.create_line(), "namespace App;");
     }
 
     #[test]
-    fn no_base_dir() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("Controller/User/Login.php");
-        let base_dir = String::from("");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+    fn file_dir() {
+        let namespace = create_namespace("Controller/Login.php", "");
 
-        let line = namespace.create_line();
-
-        assert_eq!(line, "namespace App\\Controller\\User;");
+        assert_eq!(namespace.create_line(), "namespace App\\Controller;");
     }
 
     #[test]
-    fn simple_base_dir() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("src/Controller/User/Login.php");
-        let base_dir = String::from("src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+    fn multi_file_dir() {
+        let namespace = create_namespace("Controller/User/Login.php", "");
 
-        let line = namespace.create_line();
+        assert_eq!(namespace.create_line(), "namespace App\\Controller\\User;");
+    }
 
-        assert_eq!(line, "namespace App\\Controller\\User;");
+    #[test]
+    fn base_dir() {
+        let namespace = create_namespace("src/Controller/User/Login.php", "src");
+
+        assert_eq!(namespace.create_line(), "namespace App\\Controller\\User;");
     }
 
     #[test]
     fn multi_base_dir() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("app/src/Controller/User/Login.php");
-        let base_dir = String::from("app/src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("app/src/Controller/User/Login.php", "app/src");
 
-        let line = namespace.create_line();
-
-        assert_eq!(line, "namespace App\\Controller\\User;");
+        assert_eq!(namespace.create_line(), "namespace App\\Controller\\User;");
     }
 }
