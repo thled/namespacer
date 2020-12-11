@@ -32,7 +32,7 @@ class Login {}";
     }
 
     #[test]
-    fn correct_namespace() {
+    fn correct() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("src/Controller/User/Login.php");
         let base_dir = String::from("src");
@@ -53,7 +53,7 @@ class Login {}";
     }
 
     #[test]
-    fn incorrect_namespace() {
+    fn incorrect() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("src/Controller/User/Login.php");
         let base_dir = String::from("src");
