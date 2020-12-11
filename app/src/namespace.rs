@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub mod checker;
 pub mod fixer;
@@ -28,12 +28,16 @@ impl Namespace {
         let mut line = String::from("namespace ");
 
         line.push_str(&self.vendor);
-        line.push('\\');
 
         let dir = self.path.strip_prefix(self.base_dir.to_str().unwrap());
         let dir = dir.unwrap().to_str().unwrap();
-        let main = dir.replace("/", "\\");
-        line.push_str(main.as_str());
+
+        if dir != "" {
+            line.push('\\');
+
+            let main = dir.replace("/", "\\");
+            line.push_str(main.as_str());
+        }
 
         line.push(';');
 
@@ -46,7 +50,35 @@ mod tests {
     use super::*;
 
     #[test]
-    fn create_line() {
+    fn no_dirs() {
+        let executable_name = String::from("bin/namespacer");
+        let filename = String::from("Kernel.php");
+        let base_dir = String::from("");
+        let args = vec![executable_name, filename, base_dir];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        let line = namespace.create_line();
+
+        assert_eq!(line, "namespace App;");
+    }
+
+    #[test]
+    fn no_base_dir() {
+        let executable_name = String::from("bin/namespacer");
+        let filename = String::from("Controller/User/Login.php");
+        let base_dir = String::from("");
+        let args = vec![executable_name, filename, base_dir];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        let line = namespace.create_line();
+
+        assert_eq!(line, "namespace App\\Controller\\User;");
+    }
+
+    #[test]
+    fn simple_base_dir() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("src/Controller/User/Login.php");
         let base_dir = String::from("src");
@@ -60,7 +92,7 @@ mod tests {
     }
 
     #[test]
-    fn multi_part_base_dir() {
+    fn multi_base_dir() {
         let executable_name = String::from("bin/namespacer");
         let filename = String::from("app/src/Controller/User/Login.php");
         let base_dir = String::from("app/src");
