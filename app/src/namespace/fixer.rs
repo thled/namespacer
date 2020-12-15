@@ -1,51 +1,53 @@
 use super::Namespace;
 
 pub fn fix(namespace: &Namespace, contents: &str) -> String {
-    let mut fixed_contents = String::from("");
-
     let namespace_line = namespace.create_line();
-    if !contents.contains("\nnamespace ") {
-        if !contents.contains("\ndeclare(") {
-            for line in contents.lines() {
-                if line.starts_with("<?php") {
-                    fixed_contents.push_str(line);
-                    fixed_contents.push('\n');
-                    fixed_contents.push('\n');
-                    fixed_contents.push_str(&namespace_line);
-                    println!("no hit");
-                } else {
-                    fixed_contents.push_str(line);
-                }
-                fixed_contents.push('\n');
-            }
-            return fixed_contents;
-        } else {
-            for line in contents.lines() {
-                if line.starts_with("declare(") {
-                    fixed_contents.push_str(line);
-                    fixed_contents.push('\n');
-                    fixed_contents.push('\n');
-                    fixed_contents.push_str(&namespace_line);
-                    println!("no hit");
-                } else {
-                    fixed_contents.push_str(line);
-                }
-                fixed_contents.push('\n');
-            }
-            return fixed_contents;
+    let mut fixed_contents: Vec<&str> = Vec::new();
+
+    let contents_without_ns = remove_namespace(contents);
+
+    let mut has_namespace = false;
+    for line in contents_without_ns.iter().rev() {
+        if !has_namespace && (line.starts_with("declare(") || line.starts_with("<?php")) {
+            fixed_contents.push(&namespace_line);
+            fixed_contents.push("");
+            has_namespace = true;
         }
+        fixed_contents.push(line);
     }
 
-    for line in contents.lines() {
+    vec_to_string_rev(fixed_contents)
+}
+
+fn remove_namespace(contents: &str) -> Vec<&str> {
+    let mut result: Vec<&str> = Vec::new();
+
+    let lines = contents.lines();
+    let mut is_prev_line_ns = false;
+    for line in lines {
+        if is_prev_line_ns && line.eq("") {
+            is_prev_line_ns = false;
+            continue;
+        }
+
         if line.starts_with("namespace ") {
-            fixed_contents.push_str(&namespace_line);
-        } else {
-            fixed_contents.push_str(line);
+            is_prev_line_ns = true;
+            continue;
         }
-        fixed_contents.push('\n');
+
+        result.push(line)
     }
 
-    fixed_contents
+    result
+}
+
+fn vec_to_string_rev(fixed_contents: Vec<&str>) -> String {
+    let mut s = String::new();
+    for line in fixed_contents.iter().rev() {
+        s.push_str(line);
+        s.push('\n');
+    }
+    s
 }
 
 #[cfg(test)]
@@ -140,14 +142,14 @@ class Index {}
     }
 
     #[test]
-    fn correct() {
+    fn incorrect() {
         let namespace = create_namespace("src/Controller/Index.php", "src");
         let contents = "\
 <?php
 
 declare(strict_types=1);
 
-namespace App\\Controller;
+namespace App\\Controller\\Incorrect;
 
 class Index {}";
 
@@ -168,14 +170,14 @@ class Index {}
     }
 
     #[test]
-    fn incorrect() {
+    fn incorrect_position() {
         let namespace = create_namespace("src/Controller/Index.php", "src");
         let contents = "\
 <?php
 
-declare(strict_types=1);
+namespace App\\Controller;
 
-namespace App\\Controller\\Incorrect;
+declare(strict_types=1);
 
 class Index {}";
 
