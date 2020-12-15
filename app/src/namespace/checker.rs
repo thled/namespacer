@@ -22,10 +22,8 @@ pub fn check(namespace: &Namespace, contents: &str) -> bool {
                 return false;
             }
             found_namespace = true;
-        } else {
-            if !found_namespace {
-                return false;
-            }
+        } else if !found_namespace {
+            return false;
         }
     }
 
