@@ -16,6 +16,12 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 
 ## Installation
 
+### Download binary
+
+[Archives of precompiled binaries for namespacer are available.][releases]
+
+### Build binary
+
 1. Clone this repository: `$ git clone git@github.com:thled/namespacer.git`
 1. Change to project directory: `$ cd namespacer`
 1. Build and start the docker containers: `$ docker-compose up -d`
@@ -63,7 +69,8 @@ Please do contribute! Issues and pull requests are welcome.
 [license]: ./LICENSE
 [rust-badge]: https://img.shields.io/badge/Rust-1.48-blue.svg
 [rust]: https://blog.rust-lang.org/2020/11/19/Rust-1.48.html
-[docker]: https://docs.docker.com/install/
-[docker-compose]: https://docs.docker.com/compose/install/
-[psr-4]: https://www.php-fig.org/psr/psr-4/
-[psr-12]: https://www.php-fig.org/psr/psr-12/
+[docker]: https://docs.docker.com/install
+[docker-compose]: https://docs.docker.com/compose/install
+[psr-4]: https://www.php-fig.org/psr/psr-4
+[psr-12]: https://www.php-fig.org/psr/psr-12
+[releases]: https://github.com/thled/namespacer/releases

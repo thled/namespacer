@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2020-12-16
+
+### Fix
+
+- Release step in pipeline.
+
+## [0.1.1] - 2020-12-16
+
 ### Added
 
 - "Contribute" section to Readme.
@@ -14,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adding the correct namespace if none was given at all.
 - Fix position of namespace if necessary.
 - Prefix arg for namespace.
+- Release step for CI/CD pipeline (Github Actions).
 
 ### Changed
 
@@ -25,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[unreleased]: https://github.com/thled/namespacer/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/thled/namespacer/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/thled/namespacer/releases/tag/v0.1.2
+[0.1.1]: https://github.com/thled/namespacer/releases/tag/v0.1.1
 [0.1.0]: https://github.com/thled/namespacer/releases/tag/v0.1.0
 
