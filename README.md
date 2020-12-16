@@ -5,7 +5,7 @@
 [![Rust][rust-badge]][rust]
 
 namespacer is a command line tool to automatically fix wrong `namespace` declarations in PHP files
-according to PSR-4 and PSR-12.
+according to [PSR-4][psr-4] and [PSR-12][psr-12].
 
 ## Requirements
 
@@ -24,14 +24,20 @@ according to PSR-4 and PSR-12.
 
 ## Usage
 
-`$ ./namespacer FILE [ BASE_DIR [ VENDOR [ PREFIX ] ] ]`
+`$ ./namespacer FILE BASE_DIR [ VENDOR [ PREFIX ] ]`
+
+- FILE = relative path to the file
+- BASE_DIR = path prefix of the relative path to the file
+- VENDOR = top-level namespace name (default: `App`)
+- PREFIX = additional namespace (default: none)
 
 ### Examples
 
-- `$ ./namespacer Controller/Login.php` => `namespace App\Controller;`
 - `$ ./namespacer src/Controller/Login.php src` => `namespace App\Controller;`
 - `$ ./namespacer src/Controller/Login.php src Acme` => `namespace Acme\Controller;`
 - `$ ./namespacer src/Controller/Login.php src Acme Foo` => `namespace Acme\Foo\Controller;`
+- `$ ./namespacer src/Controller/Login.php src Acme Foo\\Bar` => `namespace Acme\Foo\Bar\Controller;`
+- `$ ./namespacer tests/Unit/LoginTest.php tests App Tests` => `namespace App\Tests\Unit;`
 
 ## Developing
 
@@ -59,3 +65,5 @@ Please do contribute! Issues and pull requests are welcome.
 [rust]: https://blog.rust-lang.org/2020/11/19/Rust-1.48.html
 [docker]: https://docs.docker.com/install/
 [docker-compose]: https://docs.docker.com/compose/install/
+[psr-4]: https://www.php-fig.org/psr/psr-4/
+[psr-12]: https://www.php-fig.org/psr/psr-12/
