@@ -128,4 +128,23 @@ mod tests {
 
         assert_eq!(namespace.create_line(), "namespace App\\Tests\\Controller;");
     }
+
+    #[test]
+    fn multi_prefix() {
+        let prefix = "Tests\\Unit";
+        let args = vec![
+            "bin/namespacer".to_owned(),
+            "tests/Controller/LoginTest.php".to_owned(),
+            "tests".to_owned(),
+            "App".to_owned(),
+            prefix.to_owned(),
+        ];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        assert_eq!(
+            namespace.create_line(),
+            "namespace App\\Tests\\Unit\\Controller;"
+        );
+    }
 }
