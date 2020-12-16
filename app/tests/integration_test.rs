@@ -20,7 +20,15 @@ class Login {}
     fs::write(&filename, &contents)?;
 
     let executable_name = String::from("/bin/namespacer");
-    let args = vec![executable_name, filename.clone(), base_dir.to_string()];
+    let vendor = String::from("Acme");
+    let prefix = String::from("Foo");
+    let args = vec![
+        executable_name,
+        filename.clone(),
+        base_dir.to_owned(),
+        vendor,
+        prefix,
+    ];
     let config = namespacer::Config::new(&args)?;
 
     namespacer::run(config)?;
@@ -31,7 +39,7 @@ class Login {}
 
 declare(strict_types=1);
 
-namespace App\\Controller\\User;
+namespace Acme\\Foo\\Controller\\User;
 
 class Login {}
 ";
