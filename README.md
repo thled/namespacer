@@ -9,8 +9,6 @@ according to PSR-4 and PSR-12.
 
 ## Requirements
 
-todo
-
 ### Development
 
 - [Docker][docker]
@@ -18,17 +16,24 @@ todo
 
 ## Installation
 
-todo
+1. Clone this repository: `$ git clone git@github.com:thled/namespacer.git`
+1. Change to project directory: `$ cd namespacer`
+1. Build and start the docker containers: `$ docker-compose up -d`
+1. Build the app: `$ docker-compose exec app cargo build --release`
+1. Copy binary: `$ cp app/target/release/namespacer TARGET`
 
 ## Usage
 
-`$ ./namespacer FILE BASE_DIR`
+`$ ./namespacer FILE [ BASE_DIR [ VENDOR [ PREFIX ] ] ]`
 
-todo
+### Examples
+
+- `$ ./namespacer Controller/Login.php` => `namespace App\Controller;`
+- `$ ./namespacer src/Controller/Login.php src` => `namespace App\Controller;`
+- `$ ./namespacer src/Controller/Login.php src Acme` => `namespace Acme\Controller;`
+- `$ ./namespacer src/Controller/Login.php src Acme Foo` => `namespace Acme\Foo\Controller;`
 
 ## Developing
-
-todo
 
 ### Linting
 
@@ -36,7 +41,7 @@ todo
 
 ### Testing
 
-todo
+`$ cargo test`
 
 #### Watcher
 
