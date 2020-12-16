@@ -29,6 +29,11 @@ impl Namespace {
 
         line.push_str(&self.vendor);
 
+        if self.prefix != "" {
+            line.push('\\');
+            line.push_str(&self.prefix);
+        }
+
         let dir = self.path.strip_prefix(self.base_dir.to_str().unwrap());
         let dir = dir.unwrap().to_str().unwrap();
 
