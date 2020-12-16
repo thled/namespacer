@@ -73,7 +73,7 @@ mod tests {
     }
 
     #[test]
-    fn multi_file_dir() {
+    fn multi_dir_file() {
         let namespace = create_namespace("Controller/User/Login.php", "");
 
         assert_eq!(namespace.create_line(), "namespace App\\Controller\\User;");
@@ -91,5 +91,36 @@ mod tests {
         let namespace = create_namespace("app/src/Controller/User/Login.php", "app/src");
 
         assert_eq!(namespace.create_line(), "namespace App\\Controller\\User;");
+    }
+
+    #[test]
+    fn vendor() {
+        let vendor = "Acme";
+        let args = vec![
+            "bin/namespacer".to_owned(),
+            "src/Controller/Login.php".to_owned(),
+            "src".to_owned(),
+            vendor.to_owned(),
+        ];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        assert_eq!(namespace.create_line(), "namespace Acme\\Controller;");
+    }
+
+    #[test]
+    fn prefix() {
+        let prefix = "Tests";
+        let args = vec![
+            "bin/namespacer".to_owned(),
+            "tests/Controller/LoginTest.php".to_owned(),
+            "tests".to_owned(),
+            "App".to_owned(),
+            prefix.to_owned(),
+        ];
+        let config = Config::new(&args).unwrap();
+        let namespace = Namespace::new(&config);
+
+        assert_eq!(namespace.create_line(), "namespace App\\Tests\\Controller;");
     }
 }

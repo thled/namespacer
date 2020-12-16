@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clippy tool for linting.
 - Adding the correct namespace if none was given at all.
 - Fix position of namespace if necessary.
+- Prefix arg for namespace.
 
 ### Changed
 
