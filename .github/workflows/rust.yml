@@ -69,7 +69,7 @@ jobs:
           override: true
       - run: cargo build --all --release && strip target/release/namespacer && mv target/release/namespacer target/release/namespacer_amd64
       - uses: softprops/action-gh-release@v1
-        # if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files:
             target/release/namespacer_amd64
