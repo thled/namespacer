@@ -72,6 +72,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files:
-            target/release/namespacer_amd64
+            app/target/release/namespacer_amd64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
