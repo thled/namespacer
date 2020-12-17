@@ -37,6 +37,8 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 - VENDOR = top-level namespace name (default: `App`)
 - PREFIX = additional namespace (default: none)
 
+`$ ./namespacer --help` for further assistance.
+
 ### Examples
 
 - `$ ./namespacer src/Controller/Login.php src` => `namespace App\Controller;`
