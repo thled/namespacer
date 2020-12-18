@@ -28,6 +28,7 @@ PREFIX:
 
 EXAMPLES:
     ./namespacer src/Controller/Login.php src
+    ./namespacer app/src/Controller/Login.php app/src
     ./namespacer tests/Unit/LoginTest.php tests App Tests
     ./namespacer src/ src
     ./namespacer tests/ tests App Tests

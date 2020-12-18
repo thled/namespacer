@@ -33,7 +33,7 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 `$ ./namespacer FILE BASE_DIR [ VENDOR [ PREFIX ] ]`
 
 - FILE = relative path to the file
-- BASE_DIR = path prefix of the relative path to the file
+- BASE\_DIR = path prefix of the relative path to the file
 - VENDOR = top-level namespace name (default: `App`)
 - PREFIX = additional namespace (default: none)
 
@@ -46,6 +46,8 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 - `$ ./namespacer src/Controller/Login.php src Acme Foo` => `namespace Acme\Foo\Controller;`
 - `$ ./namespacer src/Controller/Login.php src Acme Foo\\Bar` => `namespace Acme\Foo\Bar\Controller;`
 - `$ ./namespacer tests/Unit/LoginTest.php tests App Tests` => `namespace App\Tests\Unit;`
+- `$ ./namespacer app/src/Controller/Login.php app/src` => `namespace App\Controller;`
+- `$ ./namespacer src/ src`
 
 ## Developing
 

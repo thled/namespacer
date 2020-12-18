@@ -1,5 +1,5 @@
 pub struct Config {
-    pub filename: String,
+    pub path: String,
     pub base_dir: String,
     pub vendor: String,
     pub prefix: String,
@@ -11,7 +11,7 @@ impl Config {
             return Err("not enough arguments");
         }
 
-        let filename = args[1].clone();
+        let path = args[1].clone();
         let base_dir = args[2].clone();
         let vendor = match args.get(3) {
             Some(arg) => arg,
@@ -23,7 +23,7 @@ impl Config {
         };
 
         Ok(Config {
-            filename,
+            path,
             base_dir,
             vendor: vendor.to_string(),
             prefix: prefix.to_string(),

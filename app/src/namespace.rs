@@ -7,19 +7,19 @@ use crate::config::Config;
 pub struct Namespace {
     vendor: String,
     prefix: String,
-    path: PathBuf,
+    file_path: PathBuf,
     base_dir: PathBuf,
 }
 
 impl Namespace {
-    pub fn new(config: &Config) -> Namespace {
-        let file_path = PathBuf::from(&config.filename);
+    pub fn new(file_path: &str, config: &Config) -> Namespace {
+        let file_path = PathBuf::from(file_path);
         let path = file_path.parent().unwrap();
         let base_dir = PathBuf::from(&config.base_dir);
         Namespace {
             vendor: config.vendor.clone(),
             prefix: config.prefix.clone(),
-            path: path.to_path_buf(),
+            file_path: path.to_path_buf(),
             base_dir,
         }
     }
@@ -34,7 +34,7 @@ impl Namespace {
             line.push_str(&self.prefix);
         }
 
-        let dir = self.path.strip_prefix(self.base_dir.to_str().unwrap());
+        let dir = self.file_path.strip_prefix(self.base_dir.to_str().unwrap());
         let dir = dir.unwrap().to_str().unwrap();
 
         if dir != "" {
@@ -54,13 +54,15 @@ impl Namespace {
 mod tests {
     use super::*;
 
-    fn create_namespace(filename: &str, base_dir: &str) -> Namespace {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from(filename);
-        let base_dir = String::from(base_dir);
-        let args = vec![executable_name, filename, base_dir];
+    fn create_namespace(file_path: &str, base_dir: &str) -> Namespace {
+        let executable_name = "bin/namespacer";
+        let args = vec![
+            executable_name.to_owned(),
+            file_path.to_owned(),
+            base_dir.to_owned(),
+        ];
         let config = Config::new(&args).unwrap();
-        Namespace::new(&config)
+        Namespace::new(file_path, &config)
     }
 
     #[test]
@@ -101,14 +103,15 @@ mod tests {
     #[test]
     fn vendor() {
         let vendor = "Acme";
+        let file_path = "src/Controller/Login.php";
         let args = vec![
             "bin/namespacer".to_owned(),
-            "src/Controller/Login.php".to_owned(),
+            file_path.to_owned(),
             "src".to_owned(),
             vendor.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = Namespace::new(file_path, &config);
 
         assert_eq!(namespace.create_line(), "namespace Acme\\Controller;");
     }
@@ -116,15 +119,16 @@ mod tests {
     #[test]
     fn prefix() {
         let prefix = "Tests";
+        let file_path = "tests/Controller/LoginTest.php";
         let args = vec![
             "bin/namespacer".to_owned(),
-            "tests/Controller/LoginTest.php".to_owned(),
+            file_path.to_owned(),
             "tests".to_owned(),
             "App".to_owned(),
             prefix.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = Namespace::new(file_path, &config);
 
         assert_eq!(namespace.create_line(), "namespace App\\Tests\\Controller;");
     }
@@ -132,15 +136,16 @@ mod tests {
     #[test]
     fn multi_prefix() {
         let prefix = "Tests\\Unit";
+        let file_path = "tests/Controller/LoginTest.php";
         let args = vec![
             "bin/namespacer".to_owned(),
-            "tests/Controller/LoginTest.php".to_owned(),
+            file_path.to_owned(),
             "tests".to_owned(),
             "App".to_owned(),
             prefix.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = Namespace::new(file_path, &config);
 
         assert_eq!(
             namespace.create_line(),

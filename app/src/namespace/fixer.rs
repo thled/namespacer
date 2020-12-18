@@ -56,13 +56,15 @@ mod tests {
 
     use super::*;
 
-    fn create_namespace(filename: &str, base_dir: &str) -> Namespace {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from(filename);
-        let base_dir = String::from(base_dir);
-        let args = vec![executable_name, filename, base_dir];
+    fn create_namespace(file_path: &str, base_dir: &str) -> Namespace {
+        let executable_name = "bin/namespacer";
+        let args = vec![
+            executable_name.to_owned(),
+            file_path.to_owned(),
+            base_dir.to_owned(),
+        ];
         let config = Config::new(&args).unwrap();
-        Namespace::new(&config)
+        Namespace::new(file_path, &config)
     }
 
     #[test]

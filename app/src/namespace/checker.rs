@@ -36,14 +36,20 @@ mod tests {
 
     use super::*;
 
+    fn create_namespace(file_path: &str, base_dir: &str) -> Namespace {
+        let executable_name = "bin/namespacer";
+        let args = vec![
+            executable_name.to_owned(),
+            file_path.to_owned(),
+            base_dir.to_owned(),
+        ];
+        let config = Config::new(&args).unwrap();
+        Namespace::new(file_path, &config)
+    }
+
     #[test]
     fn no_namespace() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("src/Controller/User/Login.php");
-        let base_dir = String::from("src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("src/Controller/User/Login.php", "src");
 
         let contents = "\
 <?php
@@ -57,12 +63,7 @@ class Login {}";
 
     #[test]
     fn correct() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("src/Controller/User/Login.php");
-        let base_dir = String::from("src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("src/Controller/User/Login.php", "src");
 
         let contents = "\
 <?php
@@ -78,12 +79,7 @@ class Login {}";
 
     #[test]
     fn incorrect() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("src/Controller/User/Login.php");
-        let base_dir = String::from("src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("src/Controller/User/Login.php", "src");
 
         let contents = "\
 <?php
@@ -99,12 +95,7 @@ class Login {}";
 
     #[test]
     fn incorrect_position_early() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("src/Controller/User/Login.php");
-        let base_dir = String::from("src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("src/Controller/User/Login.php", "src");
 
         let contents = "\
 <?php
@@ -120,12 +111,7 @@ class Login {}";
 
     #[test]
     fn incorrect_position_late() {
-        let executable_name = String::from("bin/namespacer");
-        let filename = String::from("src/Controller/User/Login.php");
-        let base_dir = String::from("src");
-        let args = vec![executable_name, filename, base_dir];
-        let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(&config);
+        let namespace = create_namespace("src/Controller/User/Login.php", "src");
 
         let contents = "\
 <?php
