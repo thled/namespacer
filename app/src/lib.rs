@@ -15,7 +15,6 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
             let extension = entry_path.extension().unwrap_or_default();
             if extension == "php" {
                 let file_path = entry_path.to_string_lossy().into_owned();
-                println!("{:?}", &file_path);
                 fix_file(&file_path, &config)?;
             }
         }
