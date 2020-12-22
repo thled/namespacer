@@ -32,6 +32,8 @@ pub fn check(namespace: &Namespace, contents: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use crate::{namespace::Namespace, Config};
 
     use super::*;
@@ -44,7 +46,7 @@ mod tests {
             base_dir.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        Namespace::new(file_path, &config)
+        Namespace::new(&PathBuf::from(&file_path), &config)
     }
 
     #[test]

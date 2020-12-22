@@ -12,8 +12,7 @@ pub struct Namespace {
 }
 
 impl Namespace {
-    pub fn new(file_path: &str, config: &Config) -> Namespace {
-        let file_path = PathBuf::from(file_path);
+    pub fn new(file_path: &PathBuf, config: &Config) -> Namespace {
         let path = file_path.parent().unwrap();
         let base_dir = PathBuf::from(&config.base_dir);
         Namespace {
@@ -62,7 +61,7 @@ mod tests {
             base_dir.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        Namespace::new(file_path, &config)
+        Namespace::new(&PathBuf::from(&file_path), &config)
     }
 
     #[test]
@@ -111,7 +110,7 @@ mod tests {
             vendor.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(file_path, &config);
+        let namespace = Namespace::new(&PathBuf::from(&file_path), &config);
 
         assert_eq!(namespace.create_line(), "namespace Acme\\Controller;");
     }
@@ -128,7 +127,7 @@ mod tests {
             prefix.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(file_path, &config);
+        let namespace = Namespace::new(&PathBuf::from(&file_path), &config);
 
         assert_eq!(namespace.create_line(), "namespace App\\Tests\\Controller;");
     }
@@ -145,7 +144,7 @@ mod tests {
             prefix.to_owned(),
         ];
         let config = Config::new(&args).unwrap();
-        let namespace = Namespace::new(file_path, &config);
+        let namespace = Namespace::new(&PathBuf::from(&file_path), &config);
 
         assert_eq!(
             namespace.create_line(),
