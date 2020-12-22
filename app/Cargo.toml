@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 serial_test = "0.5.1"
+glob = "0.3.0"

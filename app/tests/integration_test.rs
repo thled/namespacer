@@ -37,7 +37,6 @@ fn fix_dir() -> Result<(), Box<dyn Error>> {
 
 #[test]
 #[serial]
-#[ignore]
 fn fix_dir_recursivly() -> Result<(), Box<dyn Error>> {
     create_login_file()?;
     create_index_file()?;

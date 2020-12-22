@@ -1,3 +1,4 @@
+use glob::glob;
 use std::{error::Error, fs, path::PathBuf};
 
 pub use config::Config;
@@ -9,14 +10,12 @@ mod namespace;
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let path = PathBuf::from(&config.path);
     if path.is_dir() {
-        for entry in fs::read_dir(path)? {
+        let php_pattern = "**/*.php";
+        let path_with_php_pattern = format!("{}/{}", path.to_str().unwrap(), php_pattern);
+        for entry in glob(path_with_php_pattern.as_str())? {
             let entry = entry?;
-            let entry_path = entry.path();
-            let extension = entry_path.extension().unwrap_or_default();
-            if extension == "php" {
-                let file_path = entry_path.to_string_lossy().into_owned();
-                fix_file(&file_path, &config)?;
-            }
+            let file_path = entry.to_str().unwrap();
+            fix_file(&file_path, &config)?;
         }
         Ok(())
     } else {
