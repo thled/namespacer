@@ -67,7 +67,7 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 
 Please do contribute! Issues and pull requests are welcome.
 
-[version-badge]: https://img.shields.io/badge/version-0.1.3-blue.svg
+[version-badge]: https://img.shields.io/badge/version-1.0.0-blue.svg
 [changelog]: ./CHANGELOG.md
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: ./LICENSE

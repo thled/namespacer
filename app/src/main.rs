@@ -1,7 +1,7 @@
 use std::{env, process};
 
 const HELP: &str = "\
-namespacer 0.1.3
+namespacer 1.0.0
 Thomas Le Duc <dev@tleduc.de>
 
 namespacer automatically fixes wrong namespace declarations in PHP files.
