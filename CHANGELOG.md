@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Help text that shows with `--help`.
 - Fix whole directories.
-- Fix directories and subdirectories recursivly.
+- Fix directories and subdirectories recursively.
 
 ### Changed
 

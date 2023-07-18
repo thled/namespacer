@@ -25,7 +25,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 pub fn fix_file(file_path: &PathBuf, config: &Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(file_path)?;
 
-    let namespace = Namespace::new(file_path, &config);
+    let namespace = Namespace::new(file_path, config);
     if !checker::check(&namespace, &contents) {
         let fixed_contents = fixer::fix(&namespace, &contents);
         write_fix(file_path.as_path(), &fixed_contents)?;
@@ -37,7 +37,7 @@ pub fn fix_file(file_path: &PathBuf, config: &Config) -> Result<(), Box<dyn Erro
 fn write_fix(file_path: &Path, fixed_contents: &str) -> Result<(), Box<dyn Error>> {
     let mut tmp_filename = PathBuf::from(&file_path);
     tmp_filename.set_extension("ns_tmp");
-    fs::write(&tmp_filename, &fixed_contents)?;
-    fs::rename(&tmp_filename, &file_path)?;
+    fs::write(&tmp_filename, fixed_contents)?;
+    fs::rename(&tmp_filename, file_path)?;
     Ok(())
 }

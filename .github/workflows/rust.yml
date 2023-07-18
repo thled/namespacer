@@ -2,20 +2,16 @@ on: [push, pull_request]
 
 name: Continuous integration
 
-defaults:
-  run:
-    working-directory: ./app
-
 jobs:
   check:
     name: Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: 1.71.0
           override: true
       - run: cargo check
 
@@ -23,11 +19,11 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: 1.71.0
           override: true
       - run: cargo test
 
@@ -35,11 +31,11 @@ jobs:
     name: Rustfmt
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: 1.71.0
           override: true
       - run: rustup component add rustfmt
       - run: cargo fmt --all -- --check
@@ -48,11 +44,11 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: 1.71.0
           override: true
       - run: rustup component add clippy
       - run: cargo clippy -- -D warnings
@@ -61,10 +57,10 @@ jobs:
     name: Build binary
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.71.0
           default: true
           override: true
       - run: cargo build --all --release && strip target/release/namespacer && mv target/release/namespacer target/release/namespacer_amd64
@@ -79,10 +75,10 @@ jobs:
     name: Build binary for Windows
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.71.0
           default: true
           override: true
       - run: cargo build --all --release
@@ -97,10 +93,10 @@ jobs:
     name: Build binary for MacOS
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.71.0
           target: x86_64-apple-darwin
           default: true
           override: true

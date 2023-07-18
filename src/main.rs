@@ -15,7 +15,7 @@ USAGE:
 
 PATH:
     - Relative path to the PHP file to fix.
-    - Relative path to a directory containing PHP files to fix (recursivly traverses subdirectories).
+    - Relative path to a directory containing PHP files to fix (recursively traverses subdirectories).
 
 BASE_DIR:
     Prefix of the PATH which will be ignored constructing the namespace.

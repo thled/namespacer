@@ -9,7 +9,7 @@ pub fn check(namespace: &Namespace, contents: &str) -> bool {
 
     let mut found_namespace = false;
     for line in contents.lines() {
-        if line == "" {
+        if line.is_empty() {
             continue;
         }
 

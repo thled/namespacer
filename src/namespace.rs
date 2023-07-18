@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub mod checker;
 pub mod fixer;
@@ -12,7 +12,7 @@ pub struct Namespace {
 }
 
 impl Namespace {
-    pub fn new(file_path: &PathBuf, config: &Config) -> Namespace {
+    pub fn new(file_path: &Path, config: &Config) -> Namespace {
         let path = file_path.parent().unwrap();
         let base_dir = PathBuf::from(&config.base_dir);
         Namespace {
@@ -28,7 +28,7 @@ impl Namespace {
 
         line.push_str(&self.vendor);
 
-        if self.prefix != "" {
+        if !self.prefix.is_empty() {
             line.push('\\');
             line.push_str(&self.prefix);
         }
@@ -36,10 +36,10 @@ impl Namespace {
         let dir = self.file_path.strip_prefix(self.base_dir.to_str().unwrap());
         let dir = dir.unwrap().to_str().unwrap();
 
-        if dir != "" {
+        if !dir.is_empty() {
             line.push('\\');
 
-            let main = dir.replace("/", "\\");
+            let main = dir.replace('/', "\\");
             line.push_str(main.as_str());
         }
 

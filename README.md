@@ -7,13 +7,6 @@
 namespacer is a command line tool to automatically fix wrong `namespace` declarations in PHP files
 according to [PSR-4][psr-4] and [PSR-12][psr-12].
 
-## Requirements
-
-### Development
-
-- [Docker][docker]
-- [Docker-Compose][docker-compose]
-
 ## Installation
 
 ### Download binary
@@ -24,9 +17,8 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 
 1. Clone this repository: `$ git clone git@github.com:thled/namespacer.git`
 1. Change to project directory: `$ cd namespacer`
-1. Build and start the docker containers: `$ docker-compose up -d`
-1. Build the app: `$ docker-compose exec app cargo build --release`
-1. Copy binary: `$ cp app/target/release/namespacer TARGET`
+1. Build the app: `$ cargo build --release`
+1. Copy binary: `$ cp target/release/namespacer TARGET`
 
 ## Usage
 
@@ -51,6 +43,14 @@ according to [PSR-4][psr-4] and [PSR-12][psr-12].
 
 ## Developing
 
+### Requirements
+
+- [Rust][rust-lang]
+
+or
+
+- [Nix][nix]
+
 ### Linting
 
 `$ cargo clippy`
@@ -71,10 +71,10 @@ Please do contribute! Issues and pull requests are welcome.
 [changelog]: ./CHANGELOG.md
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: ./LICENSE
-[rust-badge]: https://img.shields.io/badge/Rust-1.48-blue.svg
-[rust]: https://blog.rust-lang.org/2020/11/19/Rust-1.48.html
-[docker]: https://docs.docker.com/install
-[docker-compose]: https://docs.docker.com/compose/install
+[nix]: https://nixos.org/download.html
+[rust-badge]: https://img.shields.io/badge/Rust-1.71-blue.svg
+[rust]: https://blog.rust-lang.org/2020/11/19/Rust-1.71.html
+[rust-lang]: https://www.rust-lang.org/tools/install
 [psr-4]: https://www.php-fig.org/psr/psr-4
 [psr-12]: https://www.php-fig.org/psr/psr-12
 [releases]: https://github.com/thled/namespacer/releases

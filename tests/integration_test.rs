@@ -37,7 +37,7 @@ fn fix_dir() -> Result<(), Box<dyn Error>> {
 
 #[test]
 #[serial]
-fn fix_dir_recursivly() -> Result<(), Box<dyn Error>> {
+fn fix_dir_recursively() -> Result<(), Box<dyn Error>> {
     create_login_file()?;
     create_index_file()?;
     let config = get_config(get_base_dir().as_str())?;
